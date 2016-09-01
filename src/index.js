@@ -21,10 +21,14 @@ io.on('connection', function(socket) {
     });
 
     socket.on('post_haiku', function(haiku) {
-        var haiku_html = '<li class="line1">' + striptags(haiku.line1) + '</li><li class="line2">' + striptags(haiku.line2) + '</li><li class="line3">' + striptags(haiku.line3) + "</li><div class='haiku_author'>" + client_ip + "</div> \n";
+        //cleans up input in case user submits some html or something
+        var line1 = striptags(haiku.line1);
+        var line2 = striptags(haiku.line2);
+        var line3 = striptags(haiku.line3);
+        var haiku_html = '<li class="line1">' + line1 + '</li><li class="line2">' + line2 + '</li><li class="line3">' + line3 + "</li><div class='haiku_author'>" + client_ip + "</div> \n";
         io.emit('share_haiku', haiku_html);
         fs.appendFile('haiku-2016-09', haiku_html, function(err) {});
-        console.log('new haiku from ' + client_ip + ': ' + haiku.line1 + "/ " + haiku.line2 + "/ " + haiku.line3);
+        console.log('new haiku from ' + client_ip + ': ' + line1 + "/ " + line2 + "/ " + line3);
     });
 });
 
