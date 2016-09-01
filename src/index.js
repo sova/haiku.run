@@ -4,6 +4,8 @@ var io = require('socket.io')(http);
 var fs = require('fs');
 var striptags = require('striptags');
 
+var number_of_clients_connected = 0;
+
 app.get('/', function(req, res) {
     res.sendfile('views/index.html');
 });
@@ -13,11 +15,13 @@ io.on('connection', function(socket) {
     var client_ip = socket.handshake.headers['x-forwarded-for'] || socket.handshake.address.address;
     //socket.request.connection._peername.address;
 
-    console.log('user [' + client_ip + '] connected');
+    number_of_clients_connected++;
+    console.log('[' + client_ip + '] connected, ' + number_of_clients_connected + ' total users online.');
 
     //when a socket is disconnected or closed, .on('disconnect') is fired
     socket.on('disconnect', function() {
-        console.log('user disconnected');
+        number_of_clients_connected--;
+        console.log('[' + client_ip + '] disconnected, ' + number_of_clients_connected + ' total users online.');
     });
 
     socket.on('post_haiku', function(haiku) {
