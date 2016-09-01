@@ -2,8 +2,8 @@
 real-time haiku sharing application
 
 # features
-fast
-multiplayer
+ +fast
+ +multiplayer
 
 #where?
 http://haiku.run
