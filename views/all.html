@@ -95,18 +95,33 @@
             display: none;
         }
 
-        #messages {
-            list-style-type: none;
-            margin: 0;
-            padding: 0;
+        .haiku li:nth-child(odd) {
+            background: hsla(210, 100%, 70%, 0.1);
+            ;
         }
 
-        #messages li {
-            padding: 5px 10px;
+        #all_haiku_link>a {
+            position: absolute;
+            left: 0;
+            top: 88px;
+            font-size: 17px;
+            text-decoration: none;
         }
 
-        #messages li:nth-child(odd) {
-            background: #eee;
+        #all_haiku_link>a:hover {
+            text-shadow: 1px 1px 1px hsl(210, 30%, 70%);
+        }
+
+        a:visited {
+            color: #ccc;
+        }
+
+        a:hover {
+            color: black;
+        }
+
+        a:active {
+            color: gray;
         }
     </style>
 </head>
@@ -120,9 +135,9 @@
         <ul id="haikus"></ul>
 
         <ul class="haiku">
-            <li class="line1">haiku are real great</li>
-            <li class="line2">but sometimes they don't make sense</li>
-            <li class="line3">refrigerator</li>
+            <li class="line1">share a haiku here!</li>
+            <li class="line2">fellows witness in realtime</li>
+            <li class="line3">your beautiful words</li>
         </ul>
         <!--<form action="">
             <input id="line1" autocomplete="off" placeholder="first 5 syllables" autofocus="true" />
@@ -136,14 +151,7 @@
     <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
     <script>
         var socket = io();
-        /*io.on('connection', function(socket) {
-            socket.join('all_haiku_room');
-        });*/
 
-
-        socket.on('load_haiku', function(haiku) {
-            $('#haikus').append($('<div class="haiku">').html(haiku));
-        });
         socket.on('load_haiku_from_file', function(haiku) {
             $('#haikus').append($('<div class="haiku">').html(haiku));
         });

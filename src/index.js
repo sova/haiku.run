@@ -50,7 +50,7 @@ io.on('connection', function(socket) {
     });
     //reads haiku from the given haiku-year-month file and sends them
     socket.on('request_haiku_from_file', function(year_and_month_string) {
-        var debugging_here = true;
+        var debugging_here = false;
         var haiku_file_string = 'haiku-' + year_and_month_string + '';
         var get_haiku_from_file_by_line_stream = byline(fs.createReadStream(haiku_file_string, {
             encoding: 'utf8'
@@ -58,6 +58,7 @@ io.on('connection', function(socket) {
         if (debugging_here) {
             console.log('haiku_file_string is ' + haiku_file_string);
         }
+        socket.join('all_haiku_room');
         get_haiku_from_file_by_line_stream.on('data', function(line_from_haiku_file) {
             io.to('all_haiku_room').emit('load_haiku_from_file', line_from_haiku_file);
             if (debugging_here) {

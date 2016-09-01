@@ -95,18 +95,33 @@
             display: none;
         }
 
-        #messages {
-            list-style-type: none;
-            margin: 0;
-            padding: 0;
+        .haiku li:nth-child(odd) {
+            background: hsla(210, 100%, 70%, 0.1);
+            ;
         }
 
-        #messages li {
-            padding: 5px 10px;
+        #all_haiku_link>a {
+            position: absolute;
+            left: 0;
+            top: 88px;
+            font-size: 17px;
+            text-decoration: none;
         }
 
-        #messages li:nth-child(odd) {
-            background: #eee;
+        #all_haiku_link>a:hover {
+            text-shadow: 1px 1px 1px hsl(210, 30%, 70%);
+        }
+
+        a:visited {
+            color: #ccc;
+        }
+
+        a:hover {
+            color: black;
+        }
+
+        a:active {
+            color: gray;
         }
     </style>
 </head>
@@ -115,6 +130,7 @@
     <div id="left_side">
         <span id="haiku_run_title">haiku.run/</span><br/>
         <!--<span id="subtitle">(real-time haiku sharing)</span>-->
+        <div id="all_haiku_link"><a href="/all">&gt;read all haiku in database</a></div>
     </div>
     <div id="right_side">
         <ul id="haikus"></ul>
