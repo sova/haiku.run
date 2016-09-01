@@ -11,6 +11,7 @@ var current_haiku_monthly_file = 'haiku-2016-09'
         })
       );*/
 var number_of_clients_connected = 0;
+var clients = [];
 
 app.get('/', function(req, res) {
     res.sendfile('views/index.html');
@@ -23,7 +24,8 @@ app.get('/all', function(req, res) {
 io.on('connection', function(socket) {
     var socket_id = socket.id;
     var client_ip = socket.handshake.headers['x-forwarded-for'] || socket.handshake.address.address;
-    //socket.request.connection._peername.address;
+    clients.push(socket);
+    //  console.info('New client connected (id=' + socket.id + ').');
 
     number_of_clients_connected++;
     console.log('[' + client_ip + '] connected, ' + number_of_clients_connected + ' total users online.');
@@ -32,6 +34,12 @@ io.on('connection', function(socket) {
     socket.on('disconnect', function() {
         number_of_clients_connected--;
         console.log('[' + client_ip + '] disconnected, ' + number_of_clients_connected + ' total users online.');
+        //on disconnect, remove from clients array
+        var index = clients.indexOf(socket);
+        if (index != -1) {
+            clients.splice(index, 1);
+            //console.info('Client gone (id=' + socket.id + ').');
+        }
     });
 
     socket.on('post_haiku', function(haiku) {
@@ -58,13 +66,14 @@ io.on('connection', function(socket) {
         if (debugging_here) {
             console.log('haiku_file_string is ' + haiku_file_string);
         }
-        socket.join('all_haiku_room');
+
         get_haiku_from_file_by_line_stream.on('data', function(line_from_haiku_file) {
-            io.to('all_haiku_room').emit('load_haiku_from_file', line_from_haiku_file);
+            clients[clients.indexOf(socket)].emit('load_haiku_from_file', line_from_haiku_file);
             if (debugging_here) {
                 console.log(line_from_haiku_file);
             }
         });
+        console.log('got all the haiku available in the file');
     });
     //ratings are tri-partite and tied to an IP address.
     socket.on('rate_haiku', function(rating) {
