@@ -24,6 +24,10 @@ app.get('/all', function(req, res) {
 io.on('connection', function(socket) {
     var socket_id = socket.id;
     var client_ip = socket.handshake.headers['x-forwarded-for'] || socket.handshake.address.address;
+    //var s = '24.210.99.1';
+    //console.log(s.replace(/(?:\.\d+){2}$/, '') + ".*.*");
+    //http://stackoverflow.com/questions/39281845/hiding-last-2-segments-of-ip-using-js-regexp/39282019#39282019
+    client_ip = '' + (client_ip.replace(/(?:\.\d+){2}$/, '') + ".*.*");
     clients.push(socket);
     //  console.info('New client connected (id=' + socket.id + ').');
 
@@ -73,7 +77,9 @@ io.on('connection', function(socket) {
                 console.log(line_from_haiku_file);
             }
         });
-        console.log('got all the haiku available in the file');
+        if (debugging_here) {
+            console.log('got all the haiku available in the file');
+        }
     });
     //ratings are tri-partite and tied to an IP address.
     socket.on('rate_haiku', function(rating) {
