@@ -10,7 +10,7 @@ app.get('/', function(req, res) {
 
 io.on('connection', function(socket) {
     var socket_id = socket.id;
-    var client_ip = client.handshake.headers['x-forwarded-for'] || client.handshake.address.address;
+    var client_ip = socket.handshake.headers['x-forwarded-for'] || socket.handshake.address.address;
     //socket.request.connection._peername.address;
 
     console.log('user [' + client_ip + '] connected');
