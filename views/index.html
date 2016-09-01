@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Socket.IO chat</title>
+    <title>haiku.run/ real-time haiku sharing</title>
     <style>
         * {
             margin: 0;
@@ -11,29 +11,65 @@
         }
 
         body {
-            font: 13px Helvetica, Arial;
+            font: 17px Helvetica, Arial;
         }
 
         form {
-            background: #000;
+            border: 1px solid #eee;
             padding: 3px;
             position: fixed;
-            bottom: 0;
-            width: 100%;
+            top: 100px;
+            left: 0px;
+            width: 400px;
+            border-right-color: hsl(210, 50%, 40%);
+            border-bottom-color: transparent;
         }
 
         form input {
             border: 0;
             padding: 10px;
-            width: 90%;
+            width: 380px;
             margin-right: .5%;
         }
 
         form button {
-            width: 9%;
+            width: 100%;
             background: rgb(130, 224, 255);
             border: none;
             padding: 10px;
+        }
+
+        #left_side {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 400px;
+            height: 100%;
+            border: 2px solid hsl(210, 50%, 40%);
+            border-width: 0 1px 0 0;
+        }
+
+        #right_side {
+            position: absolute;
+            left: 400px;
+            width: auto;
+            height: auto;
+        }
+
+        #haiku_run_title {
+            font-size: 74px;
+            font-family: "HelveticaNeue-UltraLight", "Helvetica Neue UltraLight", "Helvetica Neue", "Roboto", Helvetica, Arial, sans-serif;
+        }
+
+        #haikus {}
+
+        .haiku {
+            width: 300px;
+            height: 80px;
+            border: 1px dashed darkgreen;
+            list-style: none;
+            margin: 5px;
+            padding: 5px;
         }
 
         #messages {
@@ -53,18 +89,43 @@
 </head>
 
 <body>
-    <ul id="messages"></ul>
-    <form action="">
-        <input id="m" autocomplete="off" /><button>Send</button>
-    </form>
+    <div id="left_side">
+        <span id="haiku_run_title">haiku.run/</span>
+    </div>
+    <div id="right_side">
+        <ul id="haikus"></ul>
+
+        <ul class="haiku">
+            <li class="line1">haiku are real great</li>
+            <li class="line2">but sometimes they don't make sense</li>
+            <li class="line3">refrigerator</li>
+        </ul>
+        <form action="">
+            <input id="line1" autocomplete="off" placeholder="first 5 syllables" />
+            <input id="line2" autocomplete="off" placeholder="7 syllables" />
+            <input id="line3" autocomplete="off" placeholder="5 syllables again" />
+            <button>Submit your Haiku</button>
+        </form>
+    </div>
+    <!--/end right_side-->
     <script src="/socket.io/socket.io.js"></script>
     <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
     <script>
         var socket = io();
         $('form').submit(function() {
-            socket.emit('chat message', $('#m').val());
-            $('#m').val('');
+            socket.emit('haiku', {
+                'line1': $('#line1').val(),
+                'line2': $('#line2').val(),
+                'line3': $('#line3').val()
+            });
+            //send the contents of form field #haiku thru socket
+            $('#line1').val('');
+            $('#line2').val('');
+            $('#line3').val(''); //reset haiku form to be blank on submit
             return false;
+        });
+        socket.on('haiku', function(haiku) {
+            $('.haiku').append($('<div class="haiku">').html(haiku));
         });
     </script>
 </body>
