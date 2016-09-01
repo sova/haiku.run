@@ -9,7 +9,7 @@ app.get('/', function(req, res) {
 
 io.on('connection', function(socket) {
     var socket_id = socket.id;
-    var client_ip = socket.request.connection._peername;
+    var client_ip = socket.connection.remoteAddress;
 
     console.log('user [' + client_ip + '] connected');
 
