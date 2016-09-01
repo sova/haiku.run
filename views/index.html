@@ -64,12 +64,25 @@
         #haikus {}
 
         .haiku {
+            position: relative;
             width: 300px;
-            height: 80px;
-            border: 1px dashed darkgreen;
+            height: 100px;
+            border: 1px solid #aaa;
+            border-radius: 0;
             list-style: none;
             margin: 5px;
             padding: 5px;
+            float: left;
+        }
+
+        .haiku_author {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 20px;
+            background: hsla(360, 100%, 0%, 0.1);
+            text-align: right;
         }
 
         #messages {
@@ -101,7 +114,7 @@
             <li class="line3">refrigerator</li>
         </ul>
         <form action="">
-            <input id="line1" autocomplete="off" placeholder="first 5 syllables" />
+            <input id="line1" autocomplete="off" placeholder="first 5 syllables" autofocus="true" />
             <input id="line2" autocomplete="off" placeholder="7 syllables" />
             <input id="line3" autocomplete="off" placeholder="5 syllables again" />
             <button>Submit your Haiku</button>
@@ -113,7 +126,7 @@
     <script>
         var socket = io();
         $('form').submit(function() {
-            socket.emit('haiku', {
+            socket.emit('post_haiku', {
                 'line1': $('#line1').val(),
                 'line2': $('#line2').val(),
                 'line3': $('#line3').val()
@@ -124,8 +137,8 @@
             $('#line3').val(''); //reset haiku form to be blank on submit
             return false;
         });
-        socket.on('haiku', function(haiku) {
-            $('.haiku').append($('<div class="haiku">').html(haiku));
+        socket.on('share_haiku', function(haiku) {
+            $('#haikus').append($('<div class="haiku">').html(haiku));
         });
     </script>
 </body>
