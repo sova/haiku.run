@@ -114,29 +114,54 @@
 <body>
     <div id="left_side">
         <span id="haiku_run_title">haiku.run/</span><br/>
-        <!--<span id="subtitle">(real-time haiku sharing)</span>-->
+        <span id="subtitle">(now seeing all haiku)</span>
     </div>
     <div id="right_side">
         <ul id="haikus"></ul>
 
         <ul class="haiku">
-            <li class="line1">share a haiku here!</li>
-            <li class="line2">fellows witness in realtime</li>
-            <li class="line3">your beautiful words</li>
+            <li class="line1">haiku are real great</li>
+            <li class="line2">but sometimes they don't make sense</li>
+            <li class="line3">refrigerator</li>
         </ul>
-        <form action="">
+        <!--<form action="">
             <input id="line1" autocomplete="off" placeholder="first 5 syllables" autofocus="true" />
             <input id="line2" autocomplete="off" placeholder="7 syllables" />
             <input id="line3" autocomplete="off" placeholder="5 syllables again" />
             <button>Submit your Haiku</button>
-        </form>
+        </form>-->
     </div>
     <!--/end right_side-->
     <script src="/socket.io/socket.io.js"></script>
     <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
     <script>
         var socket = io();
-        $('form').submit(function() {
+        /*io.on('connection', function(socket) {
+            socket.join('all_haiku_room');
+        });*/
+
+
+        socket.on('load_haiku', function(haiku) {
+            $('#haikus').append($('<div class="haiku">').html(haiku));
+        });
+        socket.on('load_haiku_from_file', function(haiku) {
+            $('#haikus').append($('<div class="haiku">').html(haiku));
+        });
+        socket.on('share_haiku', function(haiku) {
+            $('#haikus').append($('<div class="haiku">').html(haiku));
+        });
+
+        function on_page_load_get_all_haiku() {
+            //socket.join('all_haiku_room');
+            //request all haiku for september 2016
+            socket.emit('request_haiku_from_file', '2016-09');
+        }
+
+
+        window.onload = on_page_load_get_all_haiku;
+
+        //the haiku submission form
+        /*$('form').submit(function() {
             socket.emit('post_haiku', {
                 'line1': $('#line1').val(),
                 'line2': $('#line2').val(),
@@ -147,10 +172,7 @@
             $('#line2').val('');
             $('#line3').val(''); //reset haiku form to be blank on submit
             return false;
-        });
-        socket.on('share_haiku', function(haiku) {
-            $('#haikus').append($('<div class="haiku">').html(haiku));
-        });
+        });*/
     </script>
 </body>
 
