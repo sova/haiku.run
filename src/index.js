@@ -2,6 +2,7 @@ var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var fs = require('fs');
+var striptags = require('striptags');
 
 app.get('/', function(req, res) {
     res.sendfile('views/index.html');
@@ -9,7 +10,8 @@ app.get('/', function(req, res) {
 
 io.on('connection', function(socket) {
     var socket_id = socket.id;
-    var client_ip = socket.request.connection.remoteAddress;
+    var client_ip = client.handshake.headers['x-forwarded-for'] || client.handshake.address.address;
+    //socket.request.connection._peername.address;
 
     console.log('user [' + client_ip + '] connected');
 
@@ -19,6 +21,7 @@ io.on('connection', function(socket) {
     });
 
     socket.on('post_haiku', function(haiku) {
+        haiku = striptags(haiku)
         var haiku_html = '<li class="line1">' + haiku.line1 + '</li><li class="line2">' + haiku.line2 + '</li><li class="line3">' + haiku.line3 + "</li><div class='haiku_author'>" + client_ip + "</div> \n";
         io.emit('share_haiku', haiku_html);
         fs.appendFile('haiku-2016-09', haiku_html, function(err) {});
