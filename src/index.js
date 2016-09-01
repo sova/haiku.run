@@ -9,7 +9,7 @@ app.get('/', function(req, res) {
 
 io.on('connection', function(socket) {
     var socket_id = socket.id;
-    var client_ip = socket.connection.remoteAddress;
+    var client_ip = socket.request.connection.remoteAddress;
 
     console.log('user [' + client_ip + '] connected');
 
@@ -26,6 +26,6 @@ io.on('connection', function(socket) {
     });
 });
 
-http.listen((process.env.PORT || 8080), function() {
-    console.log('listening on *:8080');
+http.listen((process.env.PORT || 8282), function() {
+    console.log('listening on *:8282');
 });

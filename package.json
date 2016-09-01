@@ -4,7 +4,7 @@
     "description": "real-time haiku sharing application",
     "dependencies": {
         "express": "^4.10.2",
-        "socket.io": "^1.4.8"
+        "socket.io": "1.0.4"
     },
     "main": "src/index.js"
 }
