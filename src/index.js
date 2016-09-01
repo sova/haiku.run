@@ -27,6 +27,8 @@ io.on('connection', function(socket) {
         var line3 = striptags(haiku.line3);
         var haiku_html = '<li class="line1">' + line1 + '</li><li class="line2">' + line2 + '</li><li class="line3">' + line3 + "</li><div class='haiku_author'>" + client_ip + "</div> \n";
         io.emit('share_haiku', haiku_html);
+        //write to the file for this month
+        //can be programmatically derived later, this is easy to change.
         fs.appendFile('haiku-2016-09', haiku_html, function(err) {});
         console.log('new haiku from ' + client_ip + ': ' + line1 + "/ " + line2 + "/ " + line3);
     });
