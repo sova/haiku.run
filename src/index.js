@@ -1,5 +1,6 @@
 var express = require('express');
 var app = express();
+var favicon = require('serve-favicon');
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var fs = require('fs');
@@ -15,8 +16,7 @@ var current_haiku_monthly_file = 'haiku-2016-09'
 var number_of_clients_connected = 0;
 var clients = [];
 app.use(express.static('public'));
-app.use('/favicon.ico', express.static('haiku_run_favicon.ico'));
-
+app.use(favicon('haiku_run_favicon.ico'));
 app.get('/', function(req, res) {
     res.sendfile('views/index.html');
 });
