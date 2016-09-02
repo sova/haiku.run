@@ -167,6 +167,13 @@
         socket.on('share_haiku', function(haiku) {
             $('#haikus').append($('<div class="haiku">').html(haiku));
         });
+
+        $('input').keypress(function(e) {
+            if (e.which == 13) {
+                $(this).next('input').focus();
+                e.preventDefault();
+            }
+        });
     </script>
 </body>
 
