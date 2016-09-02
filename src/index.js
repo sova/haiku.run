@@ -1,9 +1,11 @@
-var app = require('express')();
+var express = require('express');
+var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var fs = require('fs');
 var striptags = require('striptags');
 var shortid = require('shortid');
+var moment = require('moment');
 var byline = require('byline');
 var current_haiku_monthly_file = 'haiku-2016-09'
     /*var get_haiku_from_file_by_line = byline(fs.createReadStream(current_haiku_monthly_file, {
@@ -12,6 +14,8 @@ var current_haiku_monthly_file = 'haiku-2016-09'
       );*/
 var number_of_clients_connected = 0;
 var clients = [];
+app.use(express.static('public'));
+app.use('/favicon.ico', express.static('haiku_run_favicon.ico'));
 
 app.get('/', function(req, res) {
     res.sendfile('views/index.html');
@@ -20,6 +24,17 @@ app.get('/', function(req, res) {
 app.get('/all', function(req, res) {
     res.sendfile('views/all.html');
 });
+
+
+var number_of_haiku_to_keep_in_cache = 7;
+var latest_haikus_cache = [];
+
+var store_haiku_in_cache = function(haiku_html) {
+    latest_haikus_cache.push(haiku_html);
+    if (latest_haikus_cache.length > number_of_haiku_to_keep_in_cache) {
+        latest_haikus_cache.shift(); //if more than (number_of_haiku_to_keep_in_cache), remove first one
+    }
+}
 
 io.on('connection', function(socket) {
     var socket_id = socket.id;
@@ -53,13 +68,24 @@ io.on('connection', function(socket) {
         var line3 = striptags(haiku.line3);
         var haiku_id = shortid.generate(); //generates a shortID [thanks NPM!] for the haiku so we can rate it.
 
-        var haiku_html = '<li class="line1">' + line1 + '</li><li class="line2">' + line2 + '</li><li class="line3">' + line3 + '</li><div class="haiku_author">' + client_ip + '</div><div class="haiku_id">' + haiku_id + '</div>\n';
+        var haiku_html = '<li class="line1">' + line1 + '</li><li class="line2">' + line2 + '</li><li class="line3">' + line3 + '</li><div class="haiku_author">' + client_ip + '</div><div class="haiku_timestamp">' + moment().format("(YYYY-MM-D) h:mm a") + '<div class="haiku_id">' + haiku_id + '</div>\n';
         io.emit('share_haiku', haiku_html);
         //write to the file for this month
         //can be programmatically derived later, this is easy to change.
         fs.appendFile(current_haiku_monthly_file, haiku_html, function(err) {});
+        /*cache*/
+        store_haiku_in_cache(haiku_html); //store into latest haiku cache
         console.log('new haiku from ' + client_ip + ' (' + haiku_id + ') ' + line1 + "/ " + line2 + "/ " + line3);
     });
+
+    //reads from latest_haikus_cache and sends them
+    socket.on('request_haiku_cache', function() {
+        latest_haikus_cache.forEach(function(a_latest_haiku) {
+            clients[clients.indexOf(socket)].emit('load_haiku_from_cache', a_latest_haiku);
+        });
+    });
+
+
     //reads haiku from the given haiku-year-month file and sends them
     socket.on('request_haiku_from_file', function(year_and_month_string) {
         var debugging_here = false;

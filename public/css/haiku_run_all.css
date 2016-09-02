@@ -1,0 +1,130 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font: 17px Helvetica, Arial;
+}
+
+form {
+    border: 1px solid #eee;
+    padding: 3px;
+    position: fixed;
+    top: 140px;
+    left: 0px;
+    width: 400px;
+    border-right-color: hsl(210, 50%, 40%);
+    border-bottom-color: transparent;
+}
+
+form input {
+    border: 0;
+    padding: 10px;
+    width: 380px;
+    margin-right: .5%;
+}
+
+form button {
+    width: 100%;
+    background: rgb(130, 224, 255);
+    border: none;
+    padding: 10px;
+}
+
+#left_side {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 400px;
+    height: 100%;
+    border: 2px solid hsl(210, 50%, 40%);
+    border-width: 0 1px 0 0;
+}
+
+#right_side {
+    position: absolute;
+    left: 400px;
+    width: auto;
+    height: auto;
+}
+
+#haiku_run_title {
+    font-size: 74px;
+    font-family: "HelveticaNeue-UltraLight", "Helvetica Neue UltraLight", "Helvetica Neue", "Roboto", Helvetica, Arial, sans-serif;
+}
+
+#subtitle {
+    font-size: 24px;
+    font-weight: 300;
+    font-family: "HelveticaNeue-UltraLight", "Helvetica Neue UltraLight", "Helvetica Neue", "Roboto", Helvetica, Arial, sans-serif;
+}
+
+#haikus {}
+
+.haiku {
+    position: relative;
+    width: 300px;
+    height: 100px;
+    border: 1px solid #aaa;
+    border-radius: 0;
+    list-style: none;
+    margin: 5px;
+    padding: 5px;
+    float: left;
+}
+
+.haiku_author {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 20px;
+    background: hsla(360, 100%, 0%, 0.1);
+    text-align: right;
+}
+
+.haiku_timestamp {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 17px;
+    font-size: 14px;
+    text-align: left;
+    color: hsla(225, 100%, 10%, .5);
+}
+
+.haiku_id {
+    display: none;
+}
+
+.haiku li:nth-child(odd) {
+    background: hsla(210, 100%, 70%, 0.1);
+    ;
+}
+
+#all_haiku_link>a {
+    position: absolute;
+    left: 0;
+    top: 88px;
+    font-size: 17px;
+    text-decoration: none;
+}
+
+#all_haiku_link>a:hover {
+    text-shadow: 1px 1px 1px hsl(210, 30%, 70%);
+}
+
+a:visited {
+    color: #ccc;
+}
+
+a:hover {
+    color: black;
+}
+
+a:active {
+    color: gray;
+}
