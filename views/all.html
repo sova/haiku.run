@@ -153,10 +153,10 @@
         var socket = io();
 
         socket.on('load_haiku_from_file', function(haiku) {
-            $('#haikus').append($('<div class="haiku">').html(haiku));
+            $('#haikus').prepend($('<div class="haiku">').html(haiku));
         });
         socket.on('share_haiku', function(haiku) {
-            $('#haikus').append($('<div class="haiku">').html(haiku));
+            $('#haikus').prepend($('<div class="haiku">').html(haiku));
         });
 
         function on_page_load_get_all_haiku() {

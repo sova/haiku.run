@@ -165,7 +165,7 @@
             return false;
         });
         socket.on('share_haiku', function(haiku) {
-            $('#haikus').append($('<div class="haiku">').html(haiku));
+            $('#haikus').prepend($('<div class="haiku">').html(haiku));
         });
 
         $('input').keypress(function(e) {

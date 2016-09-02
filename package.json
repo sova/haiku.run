@@ -1,6 +1,6 @@
 {
     "name": "haiku.run",
-    "version": "0.0.1",
+    "version": "0.1.0",
     "description": "real-time haiku sharing application",
     "dependencies": {
         "byline": "^5.0.0",
