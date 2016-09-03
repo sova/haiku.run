@@ -1,6 +1,5 @@
 var express = require('express');
 var app = express();
-var favicon = require('serve-favicon');
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var fs = require('fs');
@@ -15,8 +14,20 @@ var current_haiku_monthly_file = 'haiku-2016-09'
       );*/
 var number_of_clients_connected = 0;
 var clients = [];
-app.use(express.static('public'));
-app.use(favicon('haiku_run_favicon.ico'));
+
+app.use(express.static('public')); //for CSS file in public/css
+
+/*serve base64 encoded thing for favicon*/
+var favicon = new Buffer('AAABAAEAEBAAAAEAIABoBAAAFgAAACgAAAAQAAAAIAAAAAEAIAAAAAAAAAQAAAAAAAAAAAAAAAAAAAAAAAD/hAAN/4QADf+EAB7/hAAe/4QAHv+EAEH/hABB/4QAQf+EAFz/hABc/4QAXP+EAKb/hACm/4QApv+EAP//hAD//4QADf+EAA3/hAAN/4QAHv+EAB7/hAAe/4QAQf+EAEH/hABB/4QAXP+EAFz/hABc/4QApv+EAKb/hACm/4QA/wAAAAD/hAAN/4QADf+AA3/hAAe/4QAHv+EAB7/hABB/4QAQf+EAEH/hABc/4QAXP+EAFz/hACm/4QApv+EAKYAAAAAAAAAAP+EAA3/hAAN/4QADf+EAB7/hAAe/4QAHv+EAEH/hABB/4QAQf+EAFz/hABc/4QAXP+EAKb/hACmAAAAAAAAAAAAAAAA/4QADf+EAA3/hAAN/4QAHv+EAB7/hAAe/4QAQf+EAEH/hABB/4QAXP+EAFz/hABc/4QApgAAAAAAAAAAAAAAAAAAAAD/hAAN/4QADf+EAA3/hAAe/4QAHv+EAB7/hABB/4QAQf+EAEH/hABc/4QAXP+EAFwAAAAAAAAAAAAAAAAAAAAAAAAAAP+EAA3/hAAN/4QADf+EAB7/hAAe/4QAHv+EAEH/hABB/4QAQf+EAFz/hABcAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/4QADf+EAA3/hAAN/4QAHv+EAB7/hAAe/4QAQf+EAEH/hABB/4QAXAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/hAAN/4QADf+EAA3/hAAe/4QAHv+EAB7/hABB/4QAQf+EAEEAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP+EAA3/hAAN/4QADf+EAB7/hAAe/4QAHv+EAEH/hABBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/4QADf+EAA3/hAAN/4QAHv+EAB7/hAAe/4QAQQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/hAAN/4QADf+EAA3/hAAe/4QAHv+EAB4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP+EAA3/hAAN/4QADf+EAB7/hAAeAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/4QADf+EAA3/hAAN/4QAHgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAD/hAAN/4QADf+EAA0AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAP+EAA3/hAAN/+AAAP/wAAD/+AAA//wAAP/+AAD//wAA//8AAP//AAD//wAA//8AAP//AAD//wAA//8AAP//AAD//wAA//8AAA==', 'base64');
+app.get("/favicon.ico", function(req, res) {
+    res.statusCode = 200;
+    res.setHeader('Content-Length', favicon.length);
+    res.setHeader('Content-Type', 'image/x-icon');
+    res.setHeader("Cache-Control", "public, max-age=2592000"); // expiers after a month
+    res.setHeader("Expires", new Date(Date.now() + 2592000000).toUTCString());
+    res.end(favicon);
+});
+
 app.get('/', function(req, res) {
     res.sendfile('views/index.html');
 });
